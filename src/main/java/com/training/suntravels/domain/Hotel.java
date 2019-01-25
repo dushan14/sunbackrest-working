@@ -1,25 +1,19 @@
 package com.training.suntravels.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-@Entity
 @Table(name = "DK_HOTEL")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Hotel
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence")
+	@SequenceGenerator(name = "id_Sequence", sequenceName = "DK_Hotel_Id_SEQ1")
 	@Column(name = "ID")
 	private int Id;
 
@@ -31,6 +25,21 @@ public class Hotel
 
 	@Column(name = "STAR_RATING")
 	private int starRating;
+
+	@Column(name="TELEPHONE")
+	private String telephone;
+
+	@Column(name="COUNTRY")
+	private String country;
+
+	public Hotel( String name, String address, int starRating, String telephone, String country )
+	{
+		this.name = name;
+		this.address = address;
+		this.starRating = starRating;
+		this.telephone = telephone;
+		this.country = country;
+	}
 
 	@Override
 	public String toString()

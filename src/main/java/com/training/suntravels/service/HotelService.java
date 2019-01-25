@@ -7,4 +7,6 @@ import java.util.List;
 public interface HotelService
 {
 	List<Hotel> getAllHotels();
+
+	Integer saveHotel( Hotel hotel );
 }

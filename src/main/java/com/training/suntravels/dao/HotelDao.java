@@ -7,4 +7,6 @@ import java.util.List;
 public interface HotelDao
 {
 	List<Hotel> getAllHotels();
+
+	Integer saveHotel(Hotel hotel);
 }

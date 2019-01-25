@@ -21,4 +21,11 @@ public class HotelServiceImpl implements HotelService
 	{
 		return hotelDao.getAllHotels();
 	}
+
+	@Override
+	@Transactional
+	public Integer saveHotel( Hotel hotel )
+	{
+		return hotelDao.saveHotel( hotel );
+	}
 }
