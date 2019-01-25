@@ -1,9 +1,11 @@
 package com.training.suntravels.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.training.suntravels.domain.Contract;
 import com.training.suntravels.domain.Hotel;
 import com.training.suntravels.domain.SearchRequest;
 import com.training.suntravels.domain.SearchResult;
+import com.training.suntravels.service.ContractService;
 import com.training.suntravels.service.HotelService;
 import com.training.suntravels.service.SearchResultService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class TravelServiceController
 
 	@Autowired
 	SearchResultService searchResultService;
+
+	@Autowired
+	ContractService contractService;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String welcome()
@@ -52,5 +57,11 @@ public class TravelServiceController
 			return null;
 		}
 
+	}
+
+
+	@RequestMapping(value = "/ct",method = RequestMethod.GET)
+	public List<Contract> getContracts(){
+		return contractService.getAll();
 	}
 }
