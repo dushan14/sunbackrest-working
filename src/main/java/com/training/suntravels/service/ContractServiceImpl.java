@@ -4,6 +4,7 @@ import com.training.suntravels.dao.ContractDao;
 import com.training.suntravels.domain.Contract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,12 @@ public class ContractServiceImpl implements ContractService
 	@Override
 	public List<Contract> getAll()
 	{
-		return contractDao.getContracts();
+		return contractDao.getAll();
+	}
+
+	@Override
+	public Contract getContract( int id )
+	{
+		return contractDao.getContract( id );
 	}
 }

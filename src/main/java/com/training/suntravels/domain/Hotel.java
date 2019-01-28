@@ -1,21 +1,27 @@
 package com.training.suntravels.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table(name = "DK_HOTEL")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class Hotel
+public class Hotel implements Serializable
 {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence")
-	@SequenceGenerator(name = "id_Sequence", sequenceName = "DK_Hotel_Id_SEQ1")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence_hotel")
+	@SequenceGenerator(name = "id_Sequence_hotel", sequenceName = "DK_Hotel_Id_SEQ1")
 	@Column(name = "ID")
-	private int Id;
+	private int id;
 
 	@Column(name = "NAME")
 	private String name;
@@ -32,6 +38,14 @@ public class Hotel
 	@Column(name="COUNTRY")
 	private String country;
 
+	@OneToMany
+	@JsonIgnore
+	private Set<RoomType> roomTypes = new HashSet<RoomType>(0);
+
+	@OneToMany
+	@JsonIgnore
+	private Set<Contract> contracts=new HashSet<>( 0 );
+
 	public Hotel( String name, String address, int starRating, String telephone, String country )
 	{
 		this.name = name;
@@ -45,7 +59,7 @@ public class Hotel
 	public String toString()
 	{
 		return "Hotel{" +
-				"Id=" + Id +
+				"Id=" + id +
 				", name='" + name + '\'' +
 				", address='" + address + '\'' +
 				", starRating=" + starRating +

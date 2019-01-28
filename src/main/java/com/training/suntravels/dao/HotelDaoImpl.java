@@ -1,10 +1,13 @@
 package com.training.suntravels.dao;
 
 import com.training.suntravels.domain.Hotel;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,21 +15,33 @@ import java.util.List;
 public class HotelDaoImpl extends AbstractDao<Integer, Hotel> implements HotelDao
 {
 
-	@SuppressWarnings("unchecked")
-	public List<Hotel> getAllHotels()
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	@Autowired
+	private SessionFactory sessionFactory;
+
+	protected Session getSession()
 	{
-		Criteria criteria = createEntityCriteria();
-		return ( List<Hotel> ) criteria.list();
+
+		return sessionFactory.getCurrentSession();
+	}
+
+	@Override
+	public List<Hotel> getAll()
+	{
+		return entityManager.createQuery( "from Hotel", Hotel.class ).getResultList();
+	}
+
+	@Override
+	public Hotel getHotel( int id )
+	{
+		return entityManager.find( Hotel.class, id );
 	}
 
 	@Override
 	public Integer saveHotel( Hotel hotel )
 	{
-//		persist( hotel );
-//		saveOrUpdate( hotel );
-		Serializable save = getSession().save( hotel );
-
-		return (Integer)save;
+		return ( Integer ) getSession().save( hotel );
 	}
-
 }

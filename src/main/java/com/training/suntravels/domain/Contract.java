@@ -1,13 +1,13 @@
 package com.training.suntravels.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "DK_CONTRACT")
@@ -15,6 +15,8 @@ import java.util.Date;
 public class Contract implements Serializable
 {
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence_contract")
+	@SequenceGenerator(name = "id_Sequence_contract", sequenceName = "DK_CONTRACT_Id_SEQ1")
 	@Column(name = "ID")
 	int id;
 
@@ -24,9 +26,17 @@ public class Contract implements Serializable
 	@Column(name = "VALID_TO")
 	Date validTo;
 
-	@Column(name = "HOTEL_ID")
-	int hotelId;
+	@ManyToOne
+	@JoinColumn(name = "HOTEL_ID")
+	private Hotel hotel;
 
 	@Column(name = "CURRENCY")
 	String currency;
+
+	@OneToMany
+	@JsonIgnore
+	private Set<RoomContract> roomContracts = new HashSet<>( 0 );
+
+
+
 }

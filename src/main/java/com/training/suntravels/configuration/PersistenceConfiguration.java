@@ -1,6 +1,5 @@
 package com.training.suntravels.configuration;
 
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,14 +10,11 @@ import org.springframework.dao.annotation.PersistenceExceptionTranslationPostPro
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -32,24 +28,25 @@ public class PersistenceConfiguration
 	private Environment environment;
 
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory()
+	{
 		LocalContainerEntityManagerFactoryBean em
 				= new LocalContainerEntityManagerFactoryBean();
-		em.setDataSource(dataSource());
-		em.setPackagesToScan(new String[] { "com.training.suntravels.domain" });
+		em.setDataSource( dataSource() );
+		em.setPackagesToScan( new String[] { "com.training.suntravels.domain" } );
 
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-		em.setJpaVendorAdapter(vendorAdapter);
-		em.setJpaProperties(hibernateProperties());
+		em.setJpaVendorAdapter( vendorAdapter );
+		em.setJpaProperties( hibernateProperties() );
 
 		return em;
 	}
 
 	@Bean
-	public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+	public PersistenceExceptionTranslationPostProcessor exceptionTranslation()
+	{
 		return new PersistenceExceptionTranslationPostProcessor();
 	}
-
 
 	@Bean
 	public LocalSessionFactoryBean sessionFactory()
@@ -62,10 +59,11 @@ public class PersistenceConfiguration
 	}
 
 	@Bean
-	public HibernateTransactionManager transactionManager() {
+	public HibernateTransactionManager transactionManager()
+	{
 		HibernateTransactionManager transactionManager =
 				new HibernateTransactionManager();
-		transactionManager.setSessionFactory(sessionFactory().getObject());
+		transactionManager.setSessionFactory( sessionFactory().getObject() );
 		return transactionManager;
 	}
 
@@ -89,13 +87,13 @@ public class PersistenceConfiguration
 		return properties;
 	}
 
-//	@Bean
-//	@Autowired
-//	public HibernateTransactionManager transactionManager( SessionFactory s )
-//	{
-//		HibernateTransactionManager txManager = new HibernateTransactionManager();
-//		txManager.setSessionFactory( s );
-//		return txManager;
-//	}
+	//	@Bean
+	//	@Autowired
+	//	public HibernateTransactionManager transactionManager( SessionFactory s )
+	//	{
+	//		HibernateTransactionManager txManager = new HibernateTransactionManager();
+	//		txManager.setSessionFactory( s );
+	//		return txManager;
+	//	}
 
 }

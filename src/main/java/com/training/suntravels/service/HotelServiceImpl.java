@@ -9,17 +9,21 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service("hotelService")
-@Transactional
 public class HotelServiceImpl implements HotelService
 {
 	@Autowired
 	private HotelDao hotelDao;
 
 	@Override
-	@Transactional
-	public List<Hotel> getAllHotels()
+	public List<Hotel> getAll()
 	{
-		return hotelDao.getAllHotels();
+		return hotelDao.getAll();
+	}
+
+	@Override
+	public Hotel getHotel( int id )
+	{
+		return hotelDao.getHotel(id);
 	}
 
 	@Override

@@ -1,0 +1,62 @@
+package com.training.suntravels.dao;
+
+import com.training.suntravels.domain.RoomAdultPair;
+import com.training.suntravels.domain.SearchQueryDTO;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+@Repository
+public class SearchDaoImpl implements SearchDao
+{
+
+	@PersistenceContext
+	protected EntityManager entityManager;
+
+	@Override
+	public List<SearchQueryDTO> getResult( Date checkIn, int noOfNights, List<RoomAdultPair> roomAdultPairs )
+	{
+
+		Date checkOut=addDaysToDate( checkIn,noOfNights );
+
+		String queryStr1 = "select NEW com.training.suntravels.domain.SearchQueryDTO(rc.contract.hotel.id, rc.roomType.id, rc.noOfRooms, rc.roomType.noOfAdults)"
+				+ " from"
+				+ " RoomContract rc where"
+				+ " rc.contract.validFrom<=:checkIn"
+				+ " and"
+				+ " rc.contract.validTo>=:checkOut"
+				+ " and"
+				+ " (rc.roomType.noOfAdults>=:noOfAdultsCond0 and rc.noOfRooms>=:noOfRoomsCond0)";
+
+		for ( int i = 1; i < roomAdultPairs.size(); i++ )
+		{
+			queryStr1 += " or (rc.roomType.noOfAdults>=:noOfAdultsCond" + i + " and rc.noOfRooms>=:noOfRoomsCond" + i + ")";
+		}
+		TypedQuery<SearchQueryDTO> searchQueryDTOTypedQuery = entityManager
+				.createQuery( queryStr1, SearchQueryDTO.class )
+				.setParameter( "checkIn", checkIn )
+				.setParameter( "checkOut", checkOut );
+
+		int i = 0;
+		for ( RoomAdultPair pair : roomAdultPairs )
+		{
+			searchQueryDTOTypedQuery.setParameter( "noOfAdultsCond" + i, pair.getNoOfAdults() ).setParameter( "noOfRoomsCond" + i, pair.getNoOfRooms() );
+			i++;
+		}
+
+		return searchQueryDTOTypedQuery.getResultList();
+
+	}
+
+	private static Date addDaysToDate(Date date,int days){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, days);
+		return cal.getTime();
+	}
+}

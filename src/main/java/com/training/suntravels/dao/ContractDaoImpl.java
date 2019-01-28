@@ -8,21 +8,21 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public class ContractDaoImpl  implements ContractDao
+public class ContractDaoImpl implements ContractDao
 
 {
 	@PersistenceContext
-	protected EntityManager entityManager;
-
-//	public ContractDaoImpl(){
-//		setClazz(Contract.class );
-//	}
+	private EntityManager entityManager;
 
 	@Override
-	public List<Contract> getContracts()
+	public List<Contract> getAll()
 	{
-		List<Contract> all = entityManager.createQuery( "from Contract"  )
-				.getResultList();
-		return all;
+		return entityManager.createQuery( "from Contract", Contract.class ).getResultList();
+	}
+
+	@Override
+	public Contract getContract( int id )
+	{
+		return entityManager.find( Contract.class, id );
 	}
 }
