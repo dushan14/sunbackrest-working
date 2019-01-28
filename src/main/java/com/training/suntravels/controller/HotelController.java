@@ -2,8 +2,8 @@ package com.training.suntravels.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.training.suntravels.domain.Hotel;
-import com.training.suntravels.domain.SearchQueryDTO;
-import com.training.suntravels.domain.SearchRequest;
+import com.training.suntravels.domain.SearchRequestDTO;
+import com.training.suntravels.domain.SearchResultDTO;
 import com.training.suntravels.service.HotelService;
 import com.training.suntravels.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +36,14 @@ public class HotelController
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET, consumes = { "application/json" })
-	public List<SearchQueryDTO> getHotelsBySearch( @RequestBody String searchRequestJson )
+	public SearchResultDTO getHotelsBySearch( @RequestBody String searchRequestJson )
 	{
-		SearchRequest searchRequest;
+		SearchRequestDTO searchRequestDTO;
 		ObjectMapper mapper = new ObjectMapper();
 		try
 		{
-			searchRequest = mapper.readValue( searchRequestJson, SearchRequest.class );
-			return searchService.getSearchResult( searchRequest );
+			searchRequestDTO = mapper.readValue( searchRequestJson, SearchRequestDTO.class );
+			return searchService.getSearchResult( searchRequestDTO );
 		}
 		catch ( IOException e )
 		{

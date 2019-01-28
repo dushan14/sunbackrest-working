@@ -1,6 +1,6 @@
 package com.training.suntravels.dao;
 
-import com.training.suntravels.domain.RoomAdultPair;
+import com.training.suntravels.domain.RoomAdultCondition;
 import com.training.suntravels.domain.SearchQueryDTO;
 import org.springframework.stereotype.Repository;
 
@@ -19,12 +19,16 @@ public class SearchDaoImpl implements SearchDao
 	protected EntityManager entityManager;
 
 	@Override
-	public List<SearchQueryDTO> getResult( Date checkIn, int noOfNights, List<RoomAdultPair> roomAdultPairs )
+	public List<SearchQueryDTO> getResult( Date checkIn, int noOfNights, List<RoomAdultCondition> roomAdultPairs )
 	{
 
 		Date checkOut=addDaysToDate( checkIn,noOfNights );
 
-		String queryStr1 = "select NEW com.training.suntravels.domain.SearchQueryDTO(rc.contract.hotel.id, rc.roomType.id, rc.noOfRooms, rc.roomType.noOfAdults)"
+		String queryStr1 = "select distinct "
+				+ "NEW com.training.suntravels.domain.SearchQueryDTO("
+				+ " rc.contract.hotel.id, rc.roomType.id, rc.noOfRooms, rc.roomType.noOfAdults"
+				+ ", rc.contract.hotel.name, rc.roomType.name, rc.price, rc.contract.currency"
+				+ " )"
 				+ " from"
 				+ " RoomContract rc where"
 				+ " rc.contract.validFrom<=:checkIn"
@@ -43,13 +47,14 @@ public class SearchDaoImpl implements SearchDao
 				.setParameter( "checkOut", checkOut );
 
 		int i = 0;
-		for ( RoomAdultPair pair : roomAdultPairs )
+		for ( RoomAdultCondition pair : roomAdultPairs )
 		{
 			searchQueryDTOTypedQuery.setParameter( "noOfAdultsCond" + i, pair.getNoOfAdults() ).setParameter( "noOfRoomsCond" + i, pair.getNoOfRooms() );
 			i++;
 		}
 
-		return searchQueryDTOTypedQuery.getResultList();
+		return searchQueryDTOTypedQuery
+				.getResultList();
 
 	}
 

@@ -1,8 +1,7 @@
 package com.training.suntravels.service;
 
 import com.training.suntravels.dao.SearchDao;
-import com.training.suntravels.domain.SearchQueryDTO;
-import com.training.suntravels.domain.SearchRequest;
+import com.training.suntravels.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,46 +22,67 @@ public class SearchServiceImpl implements SearchService
 
 	@Override
 	@Transactional
-	public List<SearchQueryDTO> getSearchResult( SearchRequest searchRequest )
+	public SearchResultDTO getSearchResult( SearchRequestDTO searchRequestDTO )
 	{
-		List<SearchQueryDTO> results = searchDao.getResult( searchRequest.getCheckIn(), searchRequest.getNoOfNights(), searchRequest.getRoomAdultPairs() );
+		List<SearchQueryDTO> results = searchDao.getResult( searchRequestDTO.getCheckIn(), searchRequestDTO.getNoOfNights(), searchRequestDTO.getConditions() );
 
-//		int noOfConstraints = searchRequest.getRoomAdultPairs().size();
-//
-//		if ( noOfConstraints == 1 )
-//		{
-//
-//			int noOfRooms = searchRequest.getRoomAdultPairs().get( 0 ).getNoOfRooms();
-//			int noOfAdults = searchRequest.getRoomAdultPairs().get( 0 ).getNoOfAdults();
-//			int noOfNights = searchRequest.getNoOfNights();
-//
-//			for ( SearchQueryDTO searchResult : results )
-//			{
-//				SearchResultRoom resultRoom = new SearchResultRoom( noOfNights, noOfAdults, noOfRooms );
-////
-////				double markupPrice = costMarkupService.getCalculatedCostMarkup( noOfRooms, noOfAdults, noOfNights, searchResult.getUnitPricePerAdult() );
-////				resultRoom.setPrice( markupPrice );
-////
-////				resultRoom.setHotelId( searchResult.getHotelId() );
-////				resultRoom.setHotel( searchResult.getHotel() );
-////
-////				resultRoom.setRoomType( searchResult.getRoomType() );
-////				resultRoom.setRoomTypeId( searchResult.getRoomTypeId() );
-//
-//				//				list.add(resultRoom);
-//				// TODO: 1/25/2019 add these into final wrapper and return
-//			}
-//
-//		}
-//		else
-//		{
-//			HashMap<Integer, List<SearchQueryDTO>> resultsGroupedByHotelId = groupByHotelId( results );
-//			// TODO: 1/25/2019 from here calculate combinations inside the hotel rooms.
-//
-//
-//		}
+		SearchResultDTO searchResultDTO = new SearchResultDTO();
+		searchResultDTO.setSearchRequest( searchRequestDTO );
 
-		return results;
+		int noOfConstraints = searchRequestDTO.getConditions().size();
+
+		if ( noOfConstraints == 1 )
+		{
+
+
+			int noOfRooms = searchRequestDTO.getConditions().get( 0 ).getNoOfRooms();
+			int noOfAdults = searchRequestDTO.getConditions().get( 0 ).getNoOfAdults();
+			int noOfNights = searchRequestDTO.getNoOfNights();
+
+			for ( SearchQueryDTO searchQueryDTO : results )
+			{
+				CombinationDTO combinationDTO=new CombinationDTO();
+
+				CombinationUnitDTO unitOfResult=new CombinationUnitDTO();
+				unitOfResult.setCondition(  searchRequestDTO.getConditions().get( 0 ));
+
+				SearchResultRoomDTO resultRoom = new SearchResultRoomDTO();
+				resultRoom.setUnitPricePerNight( costMarkupService.getMarkupPrice( searchQueryDTO.getUnitPricePerAdult() ) );
+
+				double markupPrice = costMarkupService.getCalculatedCostMarkup( noOfRooms, noOfAdults, noOfNights, searchQueryDTO.getUnitPricePerAdult() );
+				resultRoom.setCurrentConditionPrice( markupPrice );
+
+				resultRoom.setRoomCapacity( searchQueryDTO.getAdultsPerRoom() );
+
+				resultRoom.setHotelId( searchQueryDTO.getHotelId() );
+				resultRoom.setHotel( searchQueryDTO.getHotel() );
+
+				resultRoom.setRoomType( searchQueryDTO.getRoomType() );
+				resultRoom.setRoomTypeId( searchQueryDTO.getRoomTypeId() );
+
+				unitOfResult.setRoomDetails( resultRoom );
+
+				combinationDTO.addUnitResult( unitOfResult );
+				combinationDTO.calculateTotalPrice();
+
+				searchResultDTO.addCombination( combinationDTO );
+			}
+
+			searchResultDTO.sortCombinationsByTotalPrice();
+
+			return searchResultDTO;
+
+		}
+		else
+		{
+			HashMap<Integer, List<SearchQueryDTO>> resultsGroupedByHotelId = groupByHotelId( results );
+			// TODO: 1/25/2019 from here calculate combinations inside the hotel rooms.
+
+			return searchResultDTO;
+
+		}
+
+
 	}
 
 	private HashMap<Integer, List<SearchQueryDTO>> groupByHotelId( List<SearchQueryDTO> searchQueryDTOS )
