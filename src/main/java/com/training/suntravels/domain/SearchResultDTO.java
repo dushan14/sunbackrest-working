@@ -13,8 +13,21 @@ public class SearchResultDTO
 
 	private List<CombinationDTO> resultCombinations = new ArrayList<>();
 
-	public void addCombination(CombinationDTO combinationDTO){
+	public SearchResultDTO( SearchRequestDTO searchRequest )
+	{
+		this.searchRequest = searchRequest;
+	}
+
+	public void addCombination( CombinationDTO combinationDTO )
+	{
+		combinationDTO.calculateTotalPrice();
 		this.resultCombinations.add( combinationDTO );
+	}
+
+	public void addCombinations( List<CombinationDTO> combinationDTOS )
+	{
+		combinationDTOS.forEach( combinationDTO -> combinationDTO.calculateTotalPrice() );
+		this.resultCombinations.addAll( combinationDTOS );
 	}
 
 	public void sortCombinationsByTotalPrice()

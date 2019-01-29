@@ -34,13 +34,16 @@ public class SearchDaoImpl implements SearchDao
 				+ " rc.contract.validFrom<=:checkIn"
 				+ " and"
 				+ " rc.contract.validTo>=:checkOut"
-				+ " and"
+				+ " and ("
 				+ " (rc.roomType.noOfAdults>=:noOfAdultsCond0 and rc.noOfRooms>=:noOfRoomsCond0)";
 
 		for ( int i = 1; i < roomAdultPairs.size(); i++ )
 		{
 			queryStr1 += " or (rc.roomType.noOfAdults>=:noOfAdultsCond" + i + " and rc.noOfRooms>=:noOfRoomsCond" + i + ")";
 		}
+
+		queryStr1+=")";
+
 		TypedQuery<SearchQueryDTO> searchQueryDTOTypedQuery = entityManager
 				.createQuery( queryStr1, SearchQueryDTO.class )
 				.setParameter( "checkIn", checkIn )

@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Repository("hotelDao")
-public class HotelDaoImpl extends AbstractDao<Integer, Hotel> implements HotelDao
+public class HotelDaoImpl implements HotelDao
 {
 
 	@PersistenceContext
