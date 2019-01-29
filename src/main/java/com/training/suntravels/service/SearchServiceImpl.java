@@ -158,6 +158,8 @@ public class SearchServiceImpl implements SearchService
 
 			List<SearchQueryDTO> satisfyingRoomTypesForCondition = getSatisfyingRoomTypesForCondition( condition, hotelResult );
 
+			Collections.sort( satisfyingRoomTypesForCondition );
+
 			boolean satisfiedForCondition = false;
 
 			for ( SearchQueryDTO queryDTO : satisfyingRoomTypesForCondition )
