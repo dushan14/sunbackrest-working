@@ -1,6 +1,5 @@
 package com.training.suntravels.dao;
 
-import com.training.suntravels.domain.RoomContract;
 import com.training.suntravels.domain.RoomType;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +23,6 @@ public class RoomTypeDaoImpl implements RoomTypeDao
 	@Override
 	public RoomType getRoomType( int id )
 	{
-		return entityManager.find( RoomType.class,id );
+		return entityManager.find( RoomType.class, id );
 	}
 }

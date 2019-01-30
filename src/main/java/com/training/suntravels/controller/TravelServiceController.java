@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TravelServiceController
 {
 
-	@RequestMapping(value = {"","/"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
 	public String welcome()
 	{
 		return "Sun Travels REST API";

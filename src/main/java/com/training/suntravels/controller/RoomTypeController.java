@@ -17,8 +17,9 @@ public class RoomTypeController
 	@Autowired
 	RoomTypeService roomTypeService;
 
-	@RequestMapping(value = {"","/"},method = RequestMethod.GET)
-	public List<RoomType> getAllRoomTypes(){
+	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
+	public List<RoomType> getAllRoomTypes()
+	{
 		return roomTypeService.getAll();
 	}
 

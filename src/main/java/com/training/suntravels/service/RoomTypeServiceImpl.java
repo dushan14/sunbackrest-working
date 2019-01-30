@@ -21,7 +21,7 @@ public class RoomTypeServiceImpl implements RoomTypeService
 	}
 
 	@Override
-	public RoomType getRoomType(int id)
+	public RoomType getRoomType( int id )
 	{
 		return roomTypeDao.getRoomType( id );
 	}

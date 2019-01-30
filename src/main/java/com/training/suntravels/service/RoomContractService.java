@@ -10,5 +10,5 @@ public interface RoomContractService
 
 	List<RoomContract> getRoomContractByContract( int contractId );
 
-	RoomContract getRoomContract(int contractId,int roomTypeId);
+	RoomContract getRoomContract( int contractId, int roomTypeId );
 }

@@ -1,8 +1,12 @@
 package com.training.suntravels.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RoomAdultCondition implements Comparable<RoomAdultCondition>
 {
 	private int noOfAdults;
@@ -17,5 +21,10 @@ public class RoomAdultCondition implements Comparable<RoomAdultCondition>
 			return 1;
 		else
 			return -1;
+	}
+
+	public RoomAdultCondition cloneObj( RoomAdultCondition condition )
+	{
+		return new RoomAdultCondition( condition.noOfAdults, noOfRooms );
 	}
 }

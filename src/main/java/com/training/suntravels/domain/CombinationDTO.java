@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class CombinationDTO implements Comparable<CombinationDTO>,Cloneable
+public class CombinationDTO implements Comparable<CombinationDTO>, Cloneable
 {
 	int hotelId;
 
@@ -51,7 +51,8 @@ public class CombinationDTO implements Comparable<CombinationDTO>,Cloneable
 		this.allocations.addAll( result );
 	}
 
-	public Object clone()throws CloneNotSupportedException{
+	public Object clone() throws CloneNotSupportedException
+	{
 		return super.clone();
 	}
 

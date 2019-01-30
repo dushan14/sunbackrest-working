@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class RoomType implements Serializable
 {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence_roomType")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence_roomType")
 	@SequenceGenerator(name = "id_Sequence_roomType", sequenceName = "DK_ROOM_TYPE_Id_SEQ1")
 	@Column(name = "ID")
 	private int id;

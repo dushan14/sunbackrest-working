@@ -8,5 +8,5 @@ public interface RoomTypeService
 {
 	List<RoomType> getAll();
 
-	RoomType getRoomType(int id);
+	RoomType getRoomType( int id );
 }

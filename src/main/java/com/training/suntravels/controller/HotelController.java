@@ -2,6 +2,7 @@ package com.training.suntravels.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.training.suntravels.domain.Hotel;
+import com.training.suntravels.domain.RoomTypeDTO;
 import com.training.suntravels.domain.SearchRequestDTO;
 import com.training.suntravels.domain.SearchResultDTO;
 import com.training.suntravels.service.HotelService;
@@ -22,7 +23,7 @@ public class HotelController
 	@Autowired
 	SearchService searchService;
 
-	@RequestMapping(value = {"","/"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
 	public List<Hotel> getAllHotels()
 	{
 		List<Hotel> all = hotelService.getAll();
@@ -33,6 +34,18 @@ public class HotelController
 	public Hotel getHotelById( @PathVariable int id )
 	{
 		return hotelService.getHotel( id );
+	}
+
+	@RequestMapping(value = "/{hotelId}/roomtypes", method = RequestMethod.GET)
+	public List<RoomTypeDTO> getHotelRooms( @PathVariable int hotelId )
+	{
+		return hotelService.getHotelRooms( hotelId );
+	}
+
+	@RequestMapping(value = "/{hotelId}/roomtypes/{roomTypeId}", method = RequestMethod.GET)
+	public RoomTypeDTO getHotelRoomsById( @PathVariable int hotelId, @PathVariable int roomTypeId )
+	{
+		return hotelService.getHotelRoomsById( hotelId, roomTypeId );
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET, consumes = { "application/json" })

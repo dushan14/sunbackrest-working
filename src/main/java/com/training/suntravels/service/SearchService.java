@@ -7,5 +7,4 @@ public interface SearchService
 {
 	SearchResultDTO getSearchResult( SearchRequestDTO searchRequestDTO );
 
-
 }

@@ -8,5 +8,5 @@ public interface ContractDao
 {
 	List<Contract> getAll();
 
-	Contract getContract(int id);
+	Contract getContract( int id );
 }

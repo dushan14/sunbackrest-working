@@ -11,6 +11,8 @@ public class SearchResultDTO
 {
 	private SearchRequestDTO searchRequest;
 
+	private int resultCombinationsSize;
+
 	private List<CombinationDTO> resultCombinations = new ArrayList<>();
 
 	public SearchResultDTO( SearchRequestDTO searchRequest )
@@ -30,8 +32,9 @@ public class SearchResultDTO
 		this.resultCombinations.addAll( combinationDTOS );
 	}
 
-	public void sortCombinationsByTotalPrice()
+	public void sortCombinationsByTotalPriceAndFinalizeSearchResult()
 	{
 		Collections.sort( resultCombinations );
+		this.resultCombinationsSize = resultCombinations.size();
 	}
 }

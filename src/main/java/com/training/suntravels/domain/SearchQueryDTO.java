@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class SearchQueryDTO implements Comparable<SearchQueryDTO>
+public class SearchQueryDTO implements Comparable<SearchQueryDTO>, Cloneable
 {
 
 	private int hotelId;
@@ -25,6 +25,24 @@ public class SearchQueryDTO implements Comparable<SearchQueryDTO>
 	private double unitPricePerAdult;
 
 	private String currency;
+
+	public SearchQueryDTO( int hotelId, int roomTypeId, int noOfRooms, int availableRooms, int adultsPerRoom, String hotel, String roomType, double unitPricePerAdult, String currency )
+	{
+		this.hotelId = hotelId;
+		this.roomTypeId = roomTypeId;
+		this.noOfRooms = noOfRooms;
+		this.availableRooms = availableRooms;
+		this.adultsPerRoom = adultsPerRoom;
+		this.hotel = hotel;
+		this.roomType = roomType;
+		this.unitPricePerAdult = unitPricePerAdult;
+		this.currency = currency;
+	}
+
+	public SearchQueryDTO cloneObj( SearchQueryDTO queryDTO )
+	{
+		return new SearchQueryDTO( queryDTO.getHotelId(), queryDTO.roomTypeId, queryDTO.noOfRooms, queryDTO.availableRooms, queryDTO.adultsPerRoom, queryDTO.hotel, queryDTO.roomType, queryDTO.unitPricePerAdult, queryDTO.currency );
+	}
 
 	public SearchQueryDTO( int hotelId, int roomTypeId, int noOfRooms, int adultsPerRoom )
 	{
@@ -79,4 +97,5 @@ public class SearchQueryDTO implements Comparable<SearchQueryDTO>
 		else
 			return -1;
 	}
+
 }

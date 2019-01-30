@@ -18,7 +18,7 @@ import java.util.Set;
 public class Hotel implements Serializable
 {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence_hotel")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence_hotel")
 	@SequenceGenerator(name = "id_Sequence_hotel", sequenceName = "DK_Hotel_Id_SEQ1")
 	@Column(name = "ID")
 	private int id;
@@ -32,19 +32,19 @@ public class Hotel implements Serializable
 	@Column(name = "STAR_RATING")
 	private int starRating;
 
-	@Column(name="TELEPHONE")
+	@Column(name = "TELEPHONE")
 	private String telephone;
 
-	@Column(name="COUNTRY")
+	@Column(name = "COUNTRY")
 	private String country;
 
 	@OneToMany
 	@JsonIgnore
-	private Set<RoomType> roomTypes = new HashSet<RoomType>(0);
+	private Set<RoomType> roomTypes = new HashSet<RoomType>( 0 );
 
 	@OneToMany
 	@JsonIgnore
-	private Set<Contract> contracts=new HashSet<>( 0 );
+	private Set<Contract> contracts = new HashSet<>( 0 );
 
 	public Hotel( String name, String address, int starRating, String telephone, String country )
 	{

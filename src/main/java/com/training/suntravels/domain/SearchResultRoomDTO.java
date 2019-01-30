@@ -11,15 +11,17 @@ import lombok.NoArgsConstructor;
 public class SearchResultRoomDTO
 {
 
-//	private int hotelId;
-//	private String hotel;
+	//	private int hotelId;
+	//	private String hotel;
 
 	private String roomType;
+
 	private int roomTypeId;
 
 	private int adultsPerRoom;
 
 	private double unitPricePerNight;
+
 	private double currentConditionPrice;
 
 	public double getCurrentConditionPrice()
@@ -27,10 +29,11 @@ public class SearchResultRoomDTO
 		return Util.roundTo2Decimals( currentConditionPrice );
 	}
 
-	public void grabDetails( SearchQueryDTO searchQueryDTO){
-		this.roomType=searchQueryDTO.getRoomType();
-		this.roomTypeId=searchQueryDTO.getRoomTypeId();
-		this.adultsPerRoom =searchQueryDTO.getAdultsPerRoom();
+	public void grabDetails( SearchQueryDTO searchQueryDTO )
+	{
+		this.roomType = searchQueryDTO.getRoomType();
+		this.roomTypeId = searchQueryDTO.getRoomTypeId();
+		this.adultsPerRoom = searchQueryDTO.getAdultsPerRoom();
 
 	}
 

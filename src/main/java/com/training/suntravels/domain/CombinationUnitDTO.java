@@ -11,7 +11,7 @@ public class CombinationUnitDTO
 
 	public CombinationUnitDTO( RoomAdultCondition condition, SearchResultRoomDTO resultRoom )
 	{
-		this.condition=condition;
-		this.roomDetails=resultRoom;
+		this.condition = condition;
+		this.roomDetails = resultRoom;
 	}
 }

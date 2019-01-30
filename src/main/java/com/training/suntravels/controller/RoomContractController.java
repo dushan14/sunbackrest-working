@@ -18,22 +18,22 @@ public class RoomContractController
 	@Autowired
 	RoomContractService roomContractService;
 
-
-	@RequestMapping(value = {"","/"},method = RequestMethod.GET)
-	public List<RoomContract> getAllRoomContracts(){
+	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
+	public List<RoomContract> getAllRoomContracts()
+	{
 		return roomContractService.getAll();
 	}
 
 	@RequestMapping(value = "/{contractId}", method = RequestMethod.GET)
-	public List<RoomContract> getRoomContractByContract( @PathVariable int contractId)
+	public List<RoomContract> getRoomContractByContract( @PathVariable int contractId )
 	{
-		return roomContractService.getRoomContractByContract(contractId);
+		return roomContractService.getRoomContractByContract( contractId );
 	}
 
 	@RequestMapping(value = "/{contractId}/{roomTypeId}", method = RequestMethod.GET)
-	public RoomContract getRoomContract( @PathVariable int contractId,@PathVariable int roomTypeId)
+	public RoomContract getRoomContract( @PathVariable int contractId, @PathVariable int roomTypeId )
 	{
-		return roomContractService.getRoomContract(contractId,roomTypeId);
+		return roomContractService.getRoomContract( contractId, roomTypeId );
 	}
 
 }

@@ -18,7 +18,7 @@ public class ContractController
 	@Autowired
 	ContractService contractService;
 
-	@RequestMapping(value = {"","/"}, method = RequestMethod.GET)
+	@RequestMapping(value = { "", "/" }, method = RequestMethod.GET)
 	public List<Contract> getAllContracts()
 	{
 		return contractService.getAll();
@@ -29,6 +29,5 @@ public class ContractController
 	{
 		return contractService.getContract( id );
 	}
-
 
 }

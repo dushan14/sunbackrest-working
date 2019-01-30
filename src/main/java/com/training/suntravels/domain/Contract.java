@@ -15,7 +15,7 @@ import java.util.Set;
 public class Contract implements Serializable
 {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence_contract")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_Sequence_contract")
 	@SequenceGenerator(name = "id_Sequence_contract", sequenceName = "DK_CONTRACT_Id_SEQ1")
 	@Column(name = "ID")
 	int id;
@@ -26,17 +26,15 @@ public class Contract implements Serializable
 	@Column(name = "VALID_TO")
 	Date validTo;
 
+	@Column(name = "CURRENCY")
+	String currency;
+
 	@ManyToOne
 	@JoinColumn(name = "HOTEL_ID")
 	private Hotel hotel;
 
-	@Column(name = "CURRENCY")
-	String currency;
-
 	@OneToMany
 	@JsonIgnore
 	private Set<RoomContract> roomContracts = new HashSet<>( 0 );
-
-
 
 }

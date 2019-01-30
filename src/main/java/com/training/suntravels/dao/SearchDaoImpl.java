@@ -18,11 +18,19 @@ public class SearchDaoImpl implements SearchDao
 	@PersistenceContext
 	protected EntityManager entityManager;
 
+	private static Date addDaysToDate( Date date, int days )
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime( date );
+		cal.add( Calendar.DATE, days );
+		return cal.getTime();
+	}
+
 	@Override
 	public List<SearchQueryDTO> getResult( Date checkIn, int noOfNights, List<RoomAdultCondition> roomAdultPairs )
 	{
 
-		Date checkOut=addDaysToDate( checkIn,noOfNights );
+		Date checkOut = addDaysToDate( checkIn, noOfNights );
 
 		String queryStr1 = "select distinct "
 				+ "NEW com.training.suntravels.domain.SearchQueryDTO("
@@ -42,7 +50,7 @@ public class SearchDaoImpl implements SearchDao
 			queryStr1 += " or (rc.roomType.noOfAdults>=:noOfAdultsCond" + i + " and rc.noOfRooms>=:noOfRoomsCond" + i + ")";
 		}
 
-		queryStr1+=")";
+		queryStr1 += ")";
 
 		TypedQuery<SearchQueryDTO> searchQueryDTOTypedQuery = entityManager
 				.createQuery( queryStr1, SearchQueryDTO.class )
@@ -59,12 +67,5 @@ public class SearchDaoImpl implements SearchDao
 		return searchQueryDTOTypedQuery
 				.getResultList();
 
-	}
-
-	private static Date addDaysToDate(Date date,int days){
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.DATE, days);
-		return cal.getTime();
 	}
 }
