@@ -22,9 +22,4 @@ public class RoomAdultCondition implements Comparable<RoomAdultCondition>
 		else
 			return -1;
 	}
-
-	public RoomAdultCondition cloneObj( RoomAdultCondition condition )
-	{
-		return new RoomAdultCondition( condition.noOfAdults, noOfRooms );
-	}
 }
