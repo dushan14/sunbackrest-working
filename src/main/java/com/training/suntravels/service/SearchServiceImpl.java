@@ -36,68 +36,25 @@ public class SearchServiceImpl implements SearchService
 		// Create searchResultDto by including searchRequestDto
 		SearchResultDTO searchResultDTO = new SearchResultDTO( searchRequestDTO );
 
-		int noOfConstraints = conditions.size();
+		HashMap<Integer, List<SearchQueryDTO>> resultsGroupedByHotelId = groupByHotelId( clonedResults );
 
-		if ( noOfConstraints == 1 )
+		HashMap<Integer, List<SearchQueryDTO>> resultsGroupedByHotelIdClone = ( HashMap<Integer, List<SearchQueryDTO>> ) resultsGroupedByHotelId.clone();
+
+		// sort conditions for optimizing room allocation
+		Collections.sort( conditions );
+
+		for ( Map.Entry<Integer, List<SearchQueryDTO>> hotelResult : resultsGroupedByHotelIdClone.entrySet() )
 		{
 
-			for ( SearchQueryDTO searchQueryDTO : clonedResults )
-			{
-				// create combinations for each allocations as it is one kondition
-				CombinationDTO combinationDTO = new CombinationDTO( searchQueryDTO.getHotelId(), searchQueryDTO.getHotel() );
-
-				// create units inside combination for each condition
-				// here only condition 0 is available
-				CombinationUnitDTO unitDTO = allocateSearchQueryDtoToConditionAndProduceCombinationUnit( conditions.get( 0 ), searchQueryDTO, noOfNights );
-				combinationDTO.addUnitResult( unitDTO );
-
-				// add combination for search allocations
-				searchResultDTO.addCombination( combinationDTO );
-			}
-
-			// sort search allocations by combination price
-			searchResultDTO.sortCombinationsByTotalPriceAndFinalizeSearchResult();
-
-			return searchResultDTO;
-
-		}
-		else
-		{
-			HashMap<Integer, List<SearchQueryDTO>> resultsGroupedByHotelId = groupByHotelId( clonedResults );
-
-			HashMap<Integer, List<SearchQueryDTO>> resultsGroupedByHotelIdClone = ( HashMap<Integer, List<SearchQueryDTO>> ) resultsGroupedByHotelId.clone();
-
-			// sort conditions for optimizing room allocation
-			Collections.sort( conditions );
-
-			for ( Map.Entry<Integer, List<SearchQueryDTO>> hotelResult : resultsGroupedByHotelIdClone.entrySet() )
-			{
-				//	setLowPriceSolutionFromHotel( conditions, noOfNights, searchResultDTO, hotelResult.getValue() );
-
-				setAllSolutionsForHotel( searchResultDTO, conditions, hotelResult.getValue(), noOfNights );
-
-			}
-
-			// sort search allocations by combination price
-			searchResultDTO.sortCombinationsByTotalPriceAndFinalizeSearchResult();
-
-			return searchResultDTO;
+			setAllSolutionsForHotel( searchResultDTO, conditions, hotelResult.getValue(), noOfNights );
 
 		}
 
-	}
-
-	private SearchResultDTO setLowPriceSolutionFromHotel( List<RoomAdultCondition> conditions, int noOfNights, SearchResultDTO searchResultDTO, List<SearchQueryDTO> hotelResult )
-	{
-		// getting combination for the hotel if the hotel can satisfy
-		CombinationDTO combinationDTO = checkAndAssignHotelForEveryConditionIfSatisfy( hotelResult, conditions, noOfNights );
-
-		if ( combinationDTO != null )
-		{
-			searchResultDTO.addCombination( combinationDTO );
-		}
+		// sort search allocations by combination price
+		searchResultDTO.sortCombinationsByTotalPriceAndFinalizeSearchResult();
 
 		return searchResultDTO;
+
 	}
 
 	private SearchResultDTO setAllSolutionsForHotel( SearchResultDTO searchResultDTO, List<RoomAdultCondition> sortedConditions, List<SearchQueryDTO> hotelResult, int noOfNights )
@@ -114,39 +71,6 @@ public class SearchServiceImpl implements SearchService
 
 		searchResultDTO.addCombinations( combinationDTOList );
 		return searchResultDTO;
-	}
-
-	private CombinationDTO checkAndAssignHotelForEveryConditionIfSatisfy( List<SearchQueryDTO> hotelResult, List<RoomAdultCondition> sortedConditions, int noOfNights )
-	{
-		// sort hotel room results by price
-		Collections.sort( hotelResult );
-
-		CombinationDTO combinationDTO = new CombinationDTO( hotelResult.get( 0 ).getHotelId(), hotelResult.get( 0 ).getHotel() );
-
-		for ( RoomAdultCondition condition : sortedConditions )
-		{
-			boolean satisfiedForCondition = false;
-			for ( SearchQueryDTO queryDTO : hotelResult )
-			{
-				if ( isSatisfyCondition( condition, queryDTO ) )
-				{
-					CombinationUnitDTO unitDTO = allocateSearchQueryDtoToConditionAndProduceCombinationUnit( condition, queryDTO, noOfNights );
-					combinationDTO.addUnitResult( unitDTO );
-
-					satisfiedForCondition = true;
-					break;
-				}
-			}
-			if ( !satisfiedForCondition )
-			{
-
-				// skip this hotel
-				return null;
-			}
-		}
-		// came satisfying all conditions
-		return combinationDTO;
-
 	}
 
 	private void checkHotelForEveryCombinationAndAddCombinationsToList( List<RoomAdultCondition> sortedConditions, List<SearchQueryDTO> availabilitiesOfRoomTypes, int noOfNights, CombinationDTO combinationDTO, List<CombinationDTO> combinationDTOList )
@@ -215,19 +139,6 @@ public class SearchServiceImpl implements SearchService
 		// need to clone inner objects here
 		List<SearchQueryDTO> clonedList = queryDTOS.stream().map( queryDTO -> queryDTO.cloneObj( queryDTO ) ).collect( toList() );
 		return clonedList;
-	}
-
-	private void cleanResultForAvailability( List<CombinationDTO> combinationDTOList, List<RoomAdultCondition> conditions )
-	{
-
-		for ( Iterator<CombinationDTO> it = combinationDTOList.iterator(); it.hasNext(); )
-		{
-			CombinationDTO combinationDTO = it.next();
-			if ( combinationDTO.getAllocations().size() != conditions.size() )
-			{
-				it.remove();
-			}
-		}
 	}
 
 	private CombinationUnitDTO allocateSearchQueryDtoToConditionAndProduceCombinationUnit( RoomAdultCondition condition, SearchQueryDTO searchQueryDTO, int noOfNights )
