@@ -4,14 +4,12 @@ import com.training.suntravels.dao.SearchDao;
 import com.training.suntravels.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
 @Service
-@Transactional
 public class SearchServiceImpl implements SearchService
 {
 	@Autowired
@@ -21,10 +19,9 @@ public class SearchServiceImpl implements SearchService
 	CostMarkupService costMarkupService;
 
 	@Override
-	@Transactional
-	public SearchResultDTO getSearchResult( SearchRequestDTO searchRequestDTO )
+	public SearchResultDTO getSearchResult( SearchRequestDTO searchRequestDTO, boolean isDeepSearch )
 	{
-		List<RoomAdultCondition> conditions = searchRequestDTO.getConditions();
+		List<RoomAdultCondition> conditions = getProcessedConditions( searchRequestDTO,isDeepSearch );
 
 		ArrayList<SearchQueryDTO> results = ( ArrayList<SearchQueryDTO> ) searchDao.getResult( searchRequestDTO.getCheckIn(), searchRequestDTO.getNoOfNights(), conditions );
 
@@ -40,8 +37,6 @@ public class SearchServiceImpl implements SearchService
 
 		HashMap<Integer, List<SearchQueryDTO>> resultsGroupedByHotelIdClone = ( HashMap<Integer, List<SearchQueryDTO>> ) resultsGroupedByHotelId.clone();
 
-		// sort conditions for optimizing room allocation
-		Collections.sort( conditions );
 
 		for ( Map.Entry<Integer, List<SearchQueryDTO>> hotelResult : resultsGroupedByHotelIdClone.entrySet() )
 		{
@@ -55,6 +50,37 @@ public class SearchServiceImpl implements SearchService
 
 		return searchResultDTO;
 
+	}
+
+	private List<RoomAdultCondition> getProcessedConditions(SearchRequestDTO searchRequestDTO,boolean isDeepSearch){
+		List<RoomAdultCondition> conditions = searchRequestDTO.getConditions();
+		if ( isDeepSearch )
+		{
+			List<RoomAdultCondition> conditionsDivided = new ArrayList<>();
+
+			for ( RoomAdultCondition condition : conditions )
+			{
+				if ( condition.getNoOfRooms()>1 ){
+					conditionsDivided.addAll( divideIntoMultipleConditions( condition ) );
+				}
+			}
+			Collections.sort( conditionsDivided );
+			return conditionsDivided;
+
+		}else {
+			Collections.sort( conditions );
+			return conditions;
+		}
+	}
+
+	private ArrayList<RoomAdultCondition> divideIntoMultipleConditions( RoomAdultCondition condition )
+	{
+		ArrayList<RoomAdultCondition> dividedCondition = new ArrayList<>();
+		for ( int i = 0; i < condition.getNoOfRooms(); i++ )
+		{
+			dividedCondition.add( new RoomAdultCondition( condition.getNoOfAdults(), 1 ) );
+		}
+		return dividedCondition;
 	}
 
 	private SearchResultDTO setAllSolutionsForHotel( SearchResultDTO searchResultDTO, List<RoomAdultCondition> sortedConditions, List<SearchQueryDTO> hotelResult, int noOfNights )

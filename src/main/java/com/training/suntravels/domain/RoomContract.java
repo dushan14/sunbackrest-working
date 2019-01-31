@@ -29,6 +29,6 @@ public class RoomContract implements Serializable
 	private int noOfRooms;
 
 	@Column(name = "PRICE")
-	private int price;
+	private double price;
 
 }

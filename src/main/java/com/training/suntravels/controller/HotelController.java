@@ -49,14 +49,14 @@ public class HotelController
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET, consumes = { "application/json" })
-	public SearchResultDTO getHotelsBySearch( @RequestBody String searchRequestJson )
+	public SearchResultDTO getHotelsBySearch( @RequestBody String searchRequestJson,@RequestParam(name = "deep",defaultValue = "false") boolean isDeepSearch )
 	{
 		SearchRequestDTO searchRequestDTO;
 		ObjectMapper mapper = new ObjectMapper();
 		try
 		{
 			searchRequestDTO = mapper.readValue( searchRequestJson, SearchRequestDTO.class );
-			return searchService.getSearchResult( searchRequestDTO );
+			return searchService.getSearchResult( searchRequestDTO,isDeepSearch );
 		}
 		catch ( IOException e )
 		{

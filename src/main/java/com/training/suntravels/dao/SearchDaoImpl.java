@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.training.suntravels.util.Util.addDaysToDate;
+//import static com.training.suntravels.util.Util.addDaysToDate;
 
 @Repository
 public class SearchDaoImpl implements SearchDao
@@ -19,6 +19,14 @@ public class SearchDaoImpl implements SearchDao
 
 	@PersistenceContext
 	protected EntityManager entityManager;
+
+	private static Date addDaysToDate( Date date, int days )
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime( date );
+		cal.add( Calendar.DATE, days );
+		return cal.getTime();
+	}
 
 	@Override
 	public List<SearchQueryDTO> getResult( Date checkIn, int noOfNights, List<RoomAdultCondition> roomAdultPairs )
@@ -33,6 +41,8 @@ public class SearchDaoImpl implements SearchDao
 				+ " )"
 				+ " from"
 				+ " RoomContract rc where"
+				+ " rc.price!=null"
+				+ " and"
 				+ " rc.contract.validFrom<=:checkIn"
 				+ " and"
 				+ " rc.contract.validTo>=:checkOut"
