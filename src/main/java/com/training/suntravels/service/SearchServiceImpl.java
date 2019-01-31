@@ -62,6 +62,8 @@ public class SearchServiceImpl implements SearchService
 			{
 				if ( condition.getNoOfRooms()>1 ){
 					conditionsDivided.addAll( divideIntoMultipleConditions( condition ) );
+				}else {
+					conditionsDivided.add(condition);
 				}
 			}
 			Collections.sort( conditionsDivided );
@@ -171,7 +173,7 @@ public class SearchServiceImpl implements SearchService
 	{
 
 		SearchResultRoomDTO resultRoom = new SearchResultRoomDTO();
-		resultRoom.setUnitPricePerNight( costMarkupService.getMarkupPrice( searchQueryDTO.getUnitPricePerAdult() ) );
+		resultRoom.setUnitPricePerAdultPerNight( costMarkupService.getMarkupPrice( searchQueryDTO.getUnitPricePerAdult() ) );
 
 		double markupPrice = costMarkupService.getCalculatedCostMarkup( condition.getNoOfRooms(), condition.getNoOfAdults(), noOfNights, searchQueryDTO.getUnitPricePerAdult() );
 		resultRoom.setCurrentConditionPrice( markupPrice );

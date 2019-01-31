@@ -20,7 +20,7 @@ public class SearchResultRoomDTO
 
 	private int adultsPerRoom;
 
-	private double unitPricePerNight;
+	private double unitPricePerAdultPerNight;
 
 	private double currentConditionPrice;
 
