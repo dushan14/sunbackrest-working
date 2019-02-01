@@ -21,7 +21,7 @@ public class SearchServiceImpl implements SearchService
 	@Override
 	public SearchResultDTO getSearchResult( SearchRequestDTO searchRequestDTO, boolean isDeepSearch )
 	{
-		List<RoomAdultCondition> conditions = getProcessedConditions( searchRequestDTO,isDeepSearch );
+		List<RoomAdultCondition> conditions = getProcessedConditions( searchRequestDTO, isDeepSearch );
 
 		ArrayList<SearchQueryDTO> results = ( ArrayList<SearchQueryDTO> ) searchDao.getResult( searchRequestDTO.getCheckIn(), searchRequestDTO.getNoOfNights(), conditions );
 
@@ -37,7 +37,6 @@ public class SearchServiceImpl implements SearchService
 
 		HashMap<Integer, List<SearchQueryDTO>> resultsGroupedByHotelIdClone = ( HashMap<Integer, List<SearchQueryDTO>> ) resultsGroupedByHotelId.clone();
 
-
 		for ( Map.Entry<Integer, List<SearchQueryDTO>> hotelResult : resultsGroupedByHotelIdClone.entrySet() )
 		{
 
@@ -52,7 +51,8 @@ public class SearchServiceImpl implements SearchService
 
 	}
 
-	private List<RoomAdultCondition> getProcessedConditions(SearchRequestDTO searchRequestDTO,boolean isDeepSearch){
+	private List<RoomAdultCondition> getProcessedConditions( SearchRequestDTO searchRequestDTO, boolean isDeepSearch )
+	{
 		List<RoomAdultCondition> conditions = searchRequestDTO.getConditions();
 		if ( isDeepSearch )
 		{
@@ -60,16 +60,21 @@ public class SearchServiceImpl implements SearchService
 
 			for ( RoomAdultCondition condition : conditions )
 			{
-				if ( condition.getNoOfRooms()>1 ){
+				if ( condition.getNoOfRooms() > 1 )
+				{
 					conditionsDivided.addAll( divideIntoMultipleConditions( condition ) );
-				}else {
-					conditionsDivided.add(condition);
+				}
+				else
+				{
+					conditionsDivided.add( condition );
 				}
 			}
 			Collections.sort( conditionsDivided );
 			return conditionsDivided;
 
-		}else {
+		}
+		else
+		{
 			Collections.sort( conditions );
 			return conditions;
 		}
